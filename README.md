@@ -10,70 +10,65 @@
 Experiment the persona pattern as a programmer for any specific applications related with your interesting area. 
 Generate the outoput using more than one AI tool and based on the code generation analyse and discussing that. 
 
-💡 Introduction
+📝 Introduction
 
-Artificial Intelligence has revolutionized the way programmers design, test, and analyze software.
-Modern AI systems can:
+In modern software development, AI-assisted coding has emerged as a transformative concept.
+Rather than manually constructing every function, developers can now interact with AI systems like ChatGPT or Lovable AI to:
 
-Auto-generate working code,
+Generate code snippets
 
-Integrate with APIs,
+Debug existing logic
 
-Compare data sources, and
+Connect APIs and databases
 
-Suggest improvements.
+Generate documentation and recommendations
 
-However, the accuracy of these AI-generated solutions depends on the prompt quality.
-A vague prompt can lead to incomplete or incorrect results, whereas a structured, role-defined prompt produces precise, actionable output.
+However, the effectiveness of these systems depends on the quality of prompts used.
+A vague prompt leads to generic, sometimes incorrect results — while a structured and context-rich prompt leads to precise, production-ready outputs.
 
-This project demonstrates how different levels of prompt design affect AI-assisted coding outcomes.
+This experiment focuses on prompt engineering as a skill that every software developer should learn.
 
-🧩 Theory of Prompt Engineering
+💡 Theory: What Is Prompt Engineering?
 
-Prompt engineering is the process of structuring text inputs that direct AI behavior.
+Prompt engineering is the practice of crafting structured, context-aware inputs for AI systems to produce optimal results.
+A well-designed prompt generally includes:
 
-Prompt Level	Description	Example
-Basic	Simple task instruction	“Write Python code to fetch API data.”
-Intermediate	Adds context or constraints	“Write Python code with error handling and formatted output.”
-Advanced	Includes role, output format, and reasoning	“As a senior Python developer, write optimized, well-commented code that compares API results and prints insights in tabular format.”
-Key Elements of a Good Prompt:
+Element	Description	Example
+Role	Defines the AI’s persona	“You are a senior Python developer.”
+Task	Specifies the goal	“Write code to fetch and compare weather data from two APIs.”
+Input Data	Provides real-world context	“City name, API key, API URLs.”
+Constraints	Adds rules and limits	“Use error handling and display results in a table.”
+Output Format	Ensures clarity	“Display results as a JSON summary and human-readable insights.”
 
-Role definition – “You are a data analyst…”
+This experiment shows how a developer evolves prompts through multiple stages to achieve professional-quality AI-assisted code.
 
-Task clarity – What exactly the AI should do.
+🧩 Stage 1 – Generating Python Code for Multiple APIs
+🧾 Prompt 1 – Basic Prompt
+Write a Python program to get weather data for a given city using an online API.
 
-Constraints – Time limit, coding style, libraries allowed.
+💻 AI Response (Basic Output)
+import requests
 
-Output expectation – Table, code, explanation, graph, etc.
+city = input("Enter city name: ")
+api_key = "YOUR_API_KEY"
+url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
+response = requests.get(url)
+data = response.json()
 
-Refinement loop – Adjust prompt until response fits need.
+print(data)
 
-⚙️ Experimental Setup
+🧠 Explanation
 
-Language: Python 3.10+
+Fetches raw JSON data from OpenWeather API.
 
-APIs Used:
+Works correctly but lacks readability, structure, and error handling.
 
-OpenWeatherMap API
- (for temperature & humidity)
+Demonstrates the outcome of a simple, unstructured prompt.
 
-AQICN API
- (for air quality index)
+🧾 Prompt 2 – Improved Prompt (Intermediate)
+You are a Python expert. Write a Python program that fetches both weather and air quality data for a given city using two different APIs. Display results neatly with clear labels and handle any potential errors.
 
-Libraries:
-requests, tabulate, matplotlib, pandas, json
-
-Environment: Jupyter Notebook / VS Code / Google Colab
-
-AI Tool: ChatGPT / Lovable AI
-
-🧾 Stage-1 : API Data Fetching
-🧠 Prompt
-You are an expert Python developer. Write Python code that connects to two APIs: 
-one providing weather data and another providing air quality data. 
-Fetch results for a user-entered city, handle errors, and display the raw output.
-
-💻 AI-Generated Code
+💻 AI Response (Improved Code)
 import requests
 
 def get_weather(city):
@@ -82,21 +77,21 @@ def get_weather(city):
         url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
         response = requests.get(url)
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+        return data
     except Exception as e:
-        print("Error fetching weather data:", e)
-        return None
+        return {"error": str(e)}
 
 def get_air_quality(city):
     try:
-        api_key = "YOUR_AIRQUALITY_API_KEY"
+        api_key = "YOUR_AIR_API_KEY"
         url = f"https://api.waqi.info/feed/{city}/?token={api_key}"
         response = requests.get(url)
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+        return data
     except Exception as e:
-        print("Error fetching air quality data:", e)
-        return None
+        return {"error": str(e)}
 
 city = input("Enter city name: ")
 weather_data = get_weather(city)
@@ -104,189 +99,197 @@ air_data = get_air_quality(city)
 
 print("\n--- Weather Data ---")
 print(weather_data)
+
 print("\n--- Air Quality Data ---")
 print(air_data)
 
-🧩 Explanation
+🔍 Observation
 
-Uses requests library to access APIs.
+Adding context and expectations in the prompt improved:
 
-Implements error handling with try-except.
+Error handling
 
-Displays raw JSON output for both sources.
+Function structure
 
-⚖️ Stage-2 : Comparing Outputs
-🧠 Prompt
-Write a Python script that compares temperature and humidity from the weather API 
-with the air quality index (AQI) from the air quality API. 
-Display results neatly using the tabulate library.
+Readable output
 
-💻 AI-Generated Code
+⚖️ Stage 2 – Comparing Outputs from Multiple APIs
+🧾 Prompt 3 – Structured Comparison
+Write Python code that compares weather and air quality data for the same city. Display a summary table showing temperature, humidity, and air quality index (AQI) side by side.
+
+💻 AI Response
 from tabulate import tabulate
 
-def compare_results(weather, air):
-    if not weather or not air:
-        print("Invalid data received.")
-        return
-
+def compare_data(weather_data, air_data):
     try:
-        temp = weather['main']['temp']
-        humidity = weather['main']['humidity']
-        aqi = air['data']['aqi']
+        temp = weather_data['main']['temp']
+        humidity = weather_data['main']['humidity']
+        aqi = air_data['data']['aqi']
+
         table = [
             ["Temperature (°C)", temp],
             ["Humidity (%)", humidity],
             ["Air Quality Index", aqi]
         ]
         print(tabulate(table, headers=["Parameter", "Value"], tablefmt="fancy_grid"))
-    except KeyError:
-        print("Data format mismatch. Please check API keys or responses.")
+    except Exception as e:
+        print("Error comparing data:", e)
 
-compare_results(weather_data, air_data)
+compare_data(weather_data, air_data)
 
-🧩 Explanation
+🧠 Output Example
+╒══════════════════════╤══════════╕
+│ Parameter            │ Value    │
+╞══════════════════════╪══════════╡
+│ Temperature (°C)     │ 33       │
+│ Humidity (%)         │ 68       │
+│ Air Quality Index    │ 142      │
+╘══════════════════════╧══════════╛
 
-This code parses JSON objects from both APIs, extracts relevant fields, and presents them in a table.
-It also checks for missing keys and mismatched formats, ensuring robustness.
+💬 Observation
 
-🔍 Stage-3 : Insight Generation
-🧠 Prompt
-Analyze the compared API data and generate human-friendly insights. 
-Based on AQI and temperature, provide suggestions for health and daily planning. 
-Output should include reasons for each suggestion.
+The prompt now requests structured formatting → output is visually organized.
 
-💻 AI-Generated Output
-Insights for Bengaluru:
-- Temperature: 28°C, Humidity: 61%, AQI: 90 (Moderate)
-- Suggestion: Outdoor activities are safe in the morning and evening.
-- Maintain hydration as humidity is moderate.
-- AQI indicates fair air; mask not necessary unless allergic.
+The inclusion of keywords like “side by side” and “table” improved the AI’s formatting decisions.
 
-🧩 Explanation
+📊 Stage 3 – Generating Insights from API Data
+🧾 Prompt 4 – Insight Generation
+Based on the comparison of weather and air quality data, provide text-based insights and daily recommendations. Include warnings when AQI is high or when humidity is uncomfortable.
 
-The AI interprets the numerical data contextually to produce actionable recommendations.
-Such natural-language responses can be integrated into chatbots or health apps.
+💻 AI Response (Generated Insights)
+Insights for Mumbai:
+- Temperature: 32°C
+- Humidity: 75%
+- AQI: 154 (Unhealthy for sensitive groups)
 
-🧠 Stage-4 : Prompt Refinement
+Recommendations:
+• Avoid outdoor physical activities during peak hours.
+• Stay hydrated to counter high humidity.
+• If you have asthma, carry a mask when outdoors.
+• Prefer indoor exercise during afternoon hours.
 
-To improve AI output quality, prompts were refined step-by-step.
+🧠 Explanation
 
-Initial Prompt
+This advanced prompt transforms AI into an analytical assistant.
+By specifying “text-based insights” and “recommendations,” the model provides real-world contextual output.
 
-“Compare two API outputs.”
+🧮 Stage 4 – Visualization and File Export
+🧾 Prompt 5 – Data Visualization
+Extend the existing program to visualize temperature and AQI data using matplotlib. Save the chart as 'weather_aqi_chart.png'.
 
-✅ Result: Too generic → AI returned simple dictionary comparison.
-
-Refined Prompt
-
-“Compare temperature and humidity from weather API with AQI from air quality API. Show results in tabular format.”
-
-✅ Result: Better, but lacked insights.
-
-Final Prompt
-
-“As an experienced data analyst, write Python code to fetch data from weather and air quality APIs, compare temperature, humidity, and AQI, then provide insights on health recommendations and outdoor suitability with explanations.”
-
-✅ Result: Structured table, logical insights, clear explanations.
-
-📊 Stage-5 : Visualization and Analysis
-🧠 Prompt
-Using matplotlib, visualize the temperature, humidity, and AQI values for three different cities.
-Display a bar chart comparing these parameters side-by-side.
-
-💻 AI-Generated Code
-import matplotlib.pyplot as plt
-import numpy as np
-
-cities = ["Delhi", "Chennai", "Mumbai"]
-temps = [35, 33, 30]
-humidity = [40, 70, 65]
-aqi = [180, 120, 95]
-
-x = np.arange(len(cities))
-width = 0.25
-
-plt.bar(x - width, temps, width, label='Temperature (°C)')
-plt.bar(x, humidity, width, label='Humidity (%)')
-plt.bar(x + width, aqi, width, label='AQI')
-
-plt.xlabel("Cities")
-plt.ylabel("Values")
-plt.title("Weather vs Air Quality Comparison")
-plt.xticks(x, cities)
-plt.legend()
-plt.show()
-
-🧩 Explanation
-
-This visualization allows users to see correlations between heat, humidity, and air quality.
-For instance, higher humidity may coincide with lower AQI due to moisture settling dust.
-
-📦 Deliverables
-Stage	Description	Output
-1	Python Code for Multiple APIs	Raw JSON Data
-2	Comparison Script	Tabular Output
-3	Insight Generation	Textual Recommendations
-4	Prompt Refinement	Structured, AI-enhanced Responses
-5	Visualization	Graphical Output
-🧩 Advanced Example – Combining APIs and Insights
-
-A more advanced prompt version can integrate multiple steps:
-
-🧠 Prompt
-Create a Python program that:
-1. Fetches data from both weather and air quality APIs for five cities.
-2. Stores them in a pandas DataFrame.
-3. Displays results in tabular and graphical forms.
-4. Provides a short AI-generated paragraph summarizing city-wise health insights.
-
-💻 AI-Generated Code (Excerpt)
-import pandas as pd
+💻 AI Response
 import matplotlib.pyplot as plt
 
-data = {
-    "City": ["Delhi", "Chennai", "Mumbai", "Bangalore", "Kolkata"],
-    "Temperature": [35, 33, 30, 28, 31],
-    "Humidity": [40, 70, 65, 61, 68],
-    "AQI": [180, 120, 95, 90, 130]
-}
+def visualize_data(weather_data, air_data):
+    parameters = ['Temperature (°C)', 'Humidity (%)', 'AQI']
+    values = [
+        weather_data['main']['temp'],
+        weather_data['main']['humidity'],
+        air_data['data']['aqi']
+    ]
 
-df = pd.DataFrame(data)
-print(df)
+    plt.bar(parameters, values, color=['skyblue', 'orange', 'lightgreen'])
+    plt.title("Weather & Air Quality Comparison")
+    plt.xlabel("Parameter")
+    plt.ylabel("Value")
+    plt.savefig("weather_aqi_chart.png")
+    plt.show()
 
-df.plot(x="City", y=["Temperature", "Humidity", "AQI"], kind="bar", figsize=(8,5))
-plt.title("City-wise Environmental Analysis")
-plt.ylabel("Values")
-plt.show()
+visualize_data(weather_data, air_data)
 
-print("\nAI-Generated Insights:")
-for i, row in df.iterrows():
-    if row.AQI > 150:
-        print(f"{row.City}: High pollution – avoid outdoor exercise.")
-    elif row.AQI > 100:
-        print(f"{row.City}: Moderate AQI – stay hydrated and limit outdoor time.")
-    else:
-        print(f"{row.City}: Air is clean – outdoor activities are safe.")
+📈 Output
 
+A bar chart showing Temperature, Humidity, and AQI.
+
+Image file exported successfully for inclusion in reports.
+
+📂 Stage 5 – Storing and Comparing Multiple Cities
+🧾 Prompt 6 – Multi-City API Comparison
+Write Python code to fetch weather and air quality data for multiple cities, store results in a CSV file, and display which city has the cleanest air.
+
+💻 AI Response
+import csv
+
+cities = ["Delhi", "Mumbai", "Chennai", "Bangalore"]
+
+with open("city_comparison.csv", "w", newline="") as file:
+    writer = csv.writer(file)
+    writer.writerow(["City", "Temperature (°C)", "Humidity (%)", "AQI"])
+
+    cleanest_city = None
+    lowest_aqi = float('inf')
+
+    for city in cities:
+        weather = get_weather(city)
+        air = get_air_quality(city)
+        temp = weather['main']['temp']
+        humidity = weather['main']['humidity']
+        aqi = air['data']['aqi']
+
+        writer.writerow([city, temp, humidity, aqi])
+
+        if aqi < lowest_aqi:
+            lowest_aqi = aqi
+            cleanest_city = city
+
+print(f"The city with the cleanest air is {cleanest_city} (AQI: {lowest_aqi})")
+
+🧠 Explanation
+
+Introduces loops, file writing, and comparative logic.
+
+Demonstrates how a more advanced prompt enables complex program logic.
+
+🧩 Stage 6 – Refinement with Natural Language Reporting
+🧾 Prompt 7 – Report Generation
+Write Python code that generates a text report summarizing weather and AQI results for each city, along with observations and recommendations. Save the report to 'daily_environment_report.txt'.
+
+💻 AI Response
+def generate_report(cities):
+    with open("daily_environment_report.txt", "w") as file:
+        for city in cities:
+            weather = get_weather(city)
+            air = get_air_quality(city)
+            temp = weather['main']['temp']
+            humidity = weather['main']['humidity']
+            aqi = air['data']['aqi']
+
+            file.write(f"\nCity: {city}\n")
+            file.write(f"Temperature: {temp}°C\nHumidity: {humidity}%\nAQI: {aqi}\n")
+
+            if aqi > 150:
+                file.write("⚠️ Air quality is poor. Avoid outdoor activity.\n")
+            else:
+                file.write("✅ Air quality is good today.\n")
+
+            file.write("-" * 40 + "\n")
+
+generate_report(cities)
+
+📄 Output
+
+Creates a daily report text file summarizing multiple cities’ conditions and health suggestions.
+
+🧾 Deliverables Summary
+Stage	Description	Output Type	Learning Outcome
+1	API Data Fetch	JSON Output	Basic integration
+2	Data Comparison	Table	Data formatting
+3	Insight Generation	Text	Analytical interpretation
+4	Visualization	Graph/Image	Visual analytics
+5	Multi-City Comparison	CSV	Data storage & analysis
+6	Report Generation	TXT	Natural language reporting
 ✍️ Reflection
 
-This project demonstrated that AI’s intelligence depends heavily on human input precision.
-Poor prompts caused incomplete data or irrelevant code, while specific, role-oriented prompts produced reliable and structured outputs.
-Each refinement cycle taught:
+This exercise emphasized how prompt precision controls AI performance:
 
-Clarity = Quality
+Poor prompts yield vague results.
 
-Constraints = Consistency
+Structured prompts with roles, constraints, and context lead to powerful code.
 
-Context = Correctness
+Iterative refinement improves not only AI understanding but also developer thinking.
 
-In future work, prompts can be expanded for:
-
-Automated visualization generation
-
-API error recovery
-
-Multi-parameter correlation (e.g., rainfall vs. AQI trends)
+Example insight:
+When I added “compare outputs” to the prompt, the AI automatically structured tabulated outputs using libraries like tabulate — showing its ability to adapt when given context.
 # Conclusion:
 Prompt engineering transforms AI from a text generator into a collaborative coding partner.
 Through this experiment, it is evident that:
